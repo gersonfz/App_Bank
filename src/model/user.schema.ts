@@ -1,6 +1,7 @@
 import { Schema } from "mongoose";
+import { UserDocument } from "../utils/types.utils";
 
-const User = new Schema({
+const User = new Schema<UserDocument>({
     username: {
         type: String,
         required: true,

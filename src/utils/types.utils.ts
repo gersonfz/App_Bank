@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 export interface RegistrationData {
     username: string;
@@ -14,4 +14,12 @@ export interface EnvConfig {
 
 export interface Payload {
     id: mongoose.Types.ObjectId
+}
+
+export interface UserDocument extends Document {
+    username: string;
+    email: string;
+    password: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
