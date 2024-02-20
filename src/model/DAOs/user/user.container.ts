@@ -17,6 +17,10 @@ class UserContainer {
         const userFound = await this.#model.findOne({ email }).select('+password');        
         return userFound;
     }
+    async userById(_id: string){        
+        const userFound = await this.#model.findById({ _id });        
+        return userFound
+    }
 
 }
 

@@ -1,3 +1,5 @@
+import { Request } from "express";
+import { JwtPayload } from "jsonwebtoken";
 import mongoose, { Document } from "mongoose";
 
 export interface RegistrationData {
@@ -23,3 +25,7 @@ export interface UserDocument extends Document {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface CustomRequest extends Request {
+    user?: JwtPayload | null;
+} 

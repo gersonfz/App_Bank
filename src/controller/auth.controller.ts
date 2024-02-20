@@ -4,13 +4,14 @@ import { HTTP_STATUS } from "../constants/api.constants";
 import bcrypt from 'bcryptjs';
 import { createAccessToken } from "../libs/jwt.libs";
 import mongoose from "mongoose";
+import { CustomRequest } from "../utils/types.utils";
+import { createUserResponse } from "../utils/createrUserResponse.utils";
 
 const dataUser = new User();
 
 class UserController {
     async register(req: Request, res: Response, next: NextFunction) {
         const { username, email, password } = req.body;
-
         try {
             const passwordHash = await bcrypt.hash(password, 10);
             const newUser = await dataUser.register({
@@ -21,72 +22,72 @@ class UserController {
             const payload = { id: newUser._id as mongoose.Types.ObjectId };
             const token = await createAccessToken(payload);
 
-            res.cookie('Token', token)
+            res.cookie('token', token)
             res.
                 status(HTTP_STATUS.CREATED).
-                json({
-                    id: newUser._id,
-                    username: newUser.username,
-                    email: newUser.email,
-                    createdAt: newUser.createdAt,
-                    updatedAt: newUser.updatedAt
-                })
+                json(createUserResponse(newUser))
 
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_ERROR).json({
-                error: 'Ocurrio un error al registrar el usuario'
+                error: 'Error sign up'
             });
             return next(error);
         }
     }
-
-
     async login(req: Request, res: Response, next: NextFunction) {
         const { email, password } = req.body;
         try {
             const userFound = await dataUser.login(email);
 
             if (!userFound) {
-                res.status(HTTP_STATUS.NOT_FOUND).json('Usuario no encontrado');
+                res.status(HTTP_STATUS.NOT_FOUND).json('User not found');
                 return;
             }
             const isPasswordValid = await bcrypt.compare(password, userFound.password);
             if (!isPasswordValid) {
-                res.status(HTTP_STATUS.UNAUTHORIZED).json('Contraseña incorrecta');
+                res.status(HTTP_STATUS.UNAUTHORIZED).json('Invalid password');
                 return;
             }
             const payload = { id: userFound._id as mongoose.Types.ObjectId };
             const token = await createAccessToken(payload);
             res.cookie("token", token)
-            res.status(HTTP_STATUS.OK).
-                json({
-                    id: userFound._id,
-                    username: userFound.username,
-                    email: userFound.email,
-                    createdAt: userFound.createdAt,
-                    updatedAt: userFound.updatedAt
-                })
+            res.status(HTTP_STATUS.OK).json(createUserResponse(userFound))
 
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_ERROR).json({
-                error: 'Ocurrio un error al loguear el usuario'
+                error: 'Login Error'
             })
             return next(error);
         }
     }
     async logout(_req: Request, res: Response, next: NextFunction) {
-        try {            
+        try {
             res.cookie('token', '', {
                 expires: new Date(0)
             });
             return res.sendStatus(HTTP_STATUS.OK)
         } catch (error) {
             res.status(HTTP_STATUS.INTERNAL_ERROR).json({
-                error: 'Ocurrio un error al cerrar sesion'
+                error: 'Logout error'
             })
             return next(error);
         }
     };
+    async profile(req: CustomRequest, res: Response, next: NextFunction) {
+        try {            
+            // Verificar si req.user existe y contiene el id
+            const userId = req.user && req.user.payload && req.user.payload.id;            
+            const userFound = await dataUser.userById(userId);
+            
+            if(!userFound){
+                return res.status(HTTP_STATUS.NOT_FOUND).json({ message: 'User not found' })
+            } 
+            return res.status(HTTP_STATUS.OK).json(createUserResponse(userFound));
+            } catch (error) {
+
+                return next(error);
+            }
+        }
 }
 
 export default new UserController();
