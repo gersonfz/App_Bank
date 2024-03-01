@@ -3,9 +3,13 @@ import { UserDocument } from "./types.utils";
 export const createUserResponse = (user: UserDocument) => {
     return {
         id: user._id,
-        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
+        phoneNumber: user.phoneNumber,
+        dateOfBirth: user.dateOfBirth,
+        address: user.address,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
-    }
-}
+    };
+};

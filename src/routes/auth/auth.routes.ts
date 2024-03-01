@@ -1,12 +1,12 @@
 import { Router } from "express";
-import UserController from '../../controller/auth.controller'
+import AuthController from '../../controller/auth.controller'
 import { authRequired } from "../../middleware/validateToken.middleware";
 
 const router = Router();
 
-router.post('/register', UserController.register);
-router.post('/login', UserController.login);
-router.post('/logout', UserController.logout);
-router.get('/profile', authRequired, UserController.profile);
+router.post('/register', AuthController.register);
+router.post('/login', AuthController.login);
+router.post('/logout', AuthController.logout);
+router.get('/profile', authRequired, AuthController.profile);
 
 export default router;

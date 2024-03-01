@@ -6,5 +6,6 @@ dotenv.config();
 export const ENV_CONFIG_PROCES: EnvConfig = {
     MONGO_URI: process.env.MONGO_URI || "",
     PORT: parseInt(process.env.PORT || "8080", 10),
-    JWT_SECRET: process.env.JWT_SECRET || ""
+    JWT_SECRET: process.env.JWT_SECRET || "",
+    SESSION_KEY: process.env.SESSION_KEY || ""
 };

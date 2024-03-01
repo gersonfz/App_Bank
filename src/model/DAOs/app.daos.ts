@@ -1,12 +1,26 @@
-import User from "../user.schema";
-import UserContainer from "./user/user.container";
+import UserContainer from './user/user.container';
+import TransferContainer from './transfer/transfer.container';
+import UserSchema from '../schema/user.schema';
+import transferSchema from '../schema/transfer.schema';
 
-const collection = 'user';
+class AppDAOs {
+    private userDB: UserContainer;
+    private transferDB: TransferContainer;
 
-class UserMongoDB extends UserContainer {
-    constructor(){ 
-        super(collection, User)
+    private userCollection = 'user';
+    private transferCollection = 'transfer';
+    constructor() {
+        this.userDB = new UserContainer(this.userCollection, UserSchema);
+        this.transferDB = new TransferContainer(this.transferCollection, transferSchema);
     }
-};
 
-export default UserMongoDB;
+    getUserDB(): UserContainer {
+        return this.userDB;
+    }
+
+    getTransferDB(): TransferContainer {
+        return this.transferDB;
+    }
+}
+
+export default new AppDAOs();
