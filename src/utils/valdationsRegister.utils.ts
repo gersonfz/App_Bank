@@ -5,7 +5,7 @@ export const validationRegister = async (user: RegistrationData) => {
     let error: string | null = null;
 
     // Validar campos requeridos 
-    if (!user.firstName.trim().trim() || !user.lastName.trim() || !user.email.trim() || !user.password.trim() || !user.address || !user.dateOfBirth || !user.phoneNumber.trim()) {
+    if (!user.firstName || !user.lastName || !user.email || !user.password || !user.address || !user.dateOfBirth || !user.phoneNumber) {
         error = 'Todos los campos requeridos deben estar presentes en la solicitud';
         return error;
     }
@@ -73,9 +73,12 @@ export const validationRegister = async (user: RegistrationData) => {
     }
 
     // Validar fecha de nacimiento
-    if (user.dateOfBirth.getFullYear() < 1900 || user.dateOfBirth.getFullYear() > new Date().getFullYear()) {
-        error = 'La fecha de nacimiento debe estar entre 1900 y el año actual';
-        return error;
+    if(user.dateOfBirth){
+        const dateOfBirth = new Date(user.dateOfBirth);
+        if (dateOfBirth.getFullYear() < 1900 || dateOfBirth.getFullYear() > new Date().getFullYear()) {
+            error = 'La fecha de nacimiento debe estar entre 1900 y el año actual';
+            return error;
+        } 
     }
 
     return error;

@@ -6,6 +6,7 @@ export const createUserResponse = (user: UserDocument) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        balance: user.balance,
         phoneNumber: user.phoneNumber,
         dateOfBirth: user.dateOfBirth,
         address: user.address,

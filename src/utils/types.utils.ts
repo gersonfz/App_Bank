@@ -53,7 +53,9 @@ export interface TransferDocument extends Document {
     status: string;
     createdAt: number;
     updateAt: number;
+    balance: number;
 }
+
 
 export interface CustomRequest extends Request {
     user?: JwtPayload | null;
