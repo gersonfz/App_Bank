@@ -10,27 +10,31 @@ export default class TransferContainer {
     }
 
     async save(transfer: TransferDocument) {
-        const userDB = UserDB.getUserDB();
         const { sender, recipient, amount } = transfer;
-        // Obtener el usuario remitente
+        const userDB = UserDB.getUserDB();
         const senderId: string = sender.toString();
         const senderUser = await userDB.userById(senderId);
         if (senderUser) {
-                // Obtener el usuario destinatario
-                const recipientUser = await this.#model.findById(recipient);
-
-                //  Restar el monto del balance del remitente y sumarlo al balance del destinatario                 
-                senderUser.balance -= amount;
-                if (recipientUser) {
-                    recipientUser.balance += amount;
-                    await recipientUser.save(); // Guardar cambios en el balance del destinatario
-                    await senderUser.save(); // Guardar cambios en el balance del remitente
-                }
+            const recipientId: string = recipient.toString();            
+            const recipientUser = await userDB.userById(recipientId);
+            console.log(recipientUser);
+            
+            senderUser.balance -= amount;
+            if (recipientUser) {
+                console.log('hola');
+                recipientUser.balance += amount;
+                await recipientUser.save();
+                await senderUser.save();
+                transfer.status = 'success';
                 return await this.#model.create(transfer);
+            }
         } else {
-            throw new Error('Usuario remitente no encontrado')
+            transfer.status = 'failed';
+            throw new Error('Sender not found');
         }
+        return;
     }
+
     async getTransferById(transferId: string) {
         console.log('hola');
 

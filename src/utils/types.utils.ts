@@ -10,6 +10,7 @@ export interface RegistrationData {
     address: Address;
     dateOfBirth: Date; 
     phoneNumber: string;
+    
 };
 
 export interface EnvConfig {
@@ -32,6 +33,7 @@ export interface UserDocument extends Document {
     dateOfBirth: Date;
     address: Address;
     balance: number;
+    
     createdAt: Date;
     updatedAt: Date;
 };
@@ -46,14 +48,13 @@ interface Address {
 }
 
 
-export interface TransferDocument extends Document {
+export interface TransferDocument {
     sender: Schema.Types.ObjectId;
     recipient: Schema.Types.ObjectId;
     amount: number;
     status: string;
-    createdAt: number;
-    updateAt: number;
-    balance: number;
+    createdAt: Date;
+    updateAt: Date;
 }
 
 

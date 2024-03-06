@@ -19,7 +19,7 @@ const transferSchema = new Schema<TransferDocument>({
     },
     status: {
         type: String,
-        enum: ['success', 'failed'],
+        enum: ['success', 'failed', 'pending'],
         default: 'success'
     }
 }, {

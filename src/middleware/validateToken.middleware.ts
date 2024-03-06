@@ -18,8 +18,8 @@ export const authRequired = (req: CustomRequest, res: Response, next: NextFuncti
         (err: VerifyErrors|null, user: JwtPayload | undefined) => {
             if(err) return res.status(HTTP_STATUS.UNAUTHORIZED).json({ messages: 'Invalid Token: Unauthorized' });
             req.user = user ?? null; // Asignar user a req.user, si user es undefined asignar null
-            return;
+            return next();
         }
     )
-    return next();
+    return;
 };

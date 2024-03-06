@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { HTTP_STATUS } from "../constants/api.constants";
 import TransferDB from '../model/DAOs/app.daos'
+import { TransferDocument } from "../utils/types.utils";
 
 const transferDB = TransferDB.getTransferDB();
 
@@ -51,14 +52,19 @@ class TransferController {
     }
     async depositMoney(req: Request, res: Response, next: NextFunction) {
         try {
-            const { sender, recipient } = req.body;
-
-            if(sender === recipient) {
-                const transferID = await transferDB.save(req.body)
-                console.log(transferID);
-                
+            const { sender, recipient, amount } = req.body;
+            const transferData: TransferDocument = {
+                sender: sender.toString(),
+                recipient: recipient.toString(),
+                amount: amount,
+                status: 'pending',
+                createdAt: new Date(),
+                updateAt: new Date()
             }
-            res.status(HTTP_STATUS.OK).json({message: 'Deposit successfully'})
+            const transferID = await transferDB.save(transferData)
+            console.log(transferID)
+            res.status(HTTP_STATUS.OK).json({ message: 'Deposit successfully' })
+
         } catch (error) {
             return next(error)
         }
